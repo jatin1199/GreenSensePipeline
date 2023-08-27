@@ -121,47 +121,47 @@ jobs:
 
             core.exportVariable('updatedFiles', updatedFiles);
 
-      - name: Commit and Push to New Branch
-        run: |
-            # Extract the source branch name
-            SOURCE_BRANCH=$GITHUB_HEAD_REF
-            NEW_BRANCH="Green-$SOURCE_BRANCH"
+      # - name: Commit and Push to New Branch
+      #   run: |
+      #       # Extract the source branch name
+      #       SOURCE_BRANCH=$GITHUB_HEAD_REF
+      #       NEW_BRANCH="Green-$SOURCE_BRANCH"
 
-            # Create and switch to the new branch
-            git checkout -b $NEW_BRANCH
+      #       # Create and switch to the new branch
+      #       git checkout -b $NEW_BRANCH
 
-            # Set git user details
-            git config user.name "GitHub Action"
-            git config user.email "action@github.com"
+      #       # Set git user details
+      #       git config user.name "GitHub Action"
+      #       git config user.email "action@github.com"
 
-            # Add and commit changes
-            git add -A
-            git commit -m "Replaced old code with new code from API" || echo "No changes to commit"
+      #       # Add and commit changes
+      #       git add -A
+      #       git commit -m "Replaced old code with new code from API" || echo "No changes to commit"
 
-            # Use GITHUB_TOKEN for authentication
-            git remote set-url origin https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}
+      #       # Use GITHUB_TOKEN for authentication
+      #       git remote set-url origin https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}
 
-            # Push changes
-            git push --set-upstream origin $NEW_BRANCH || echo "No changes to push"
+      #       # Push changes
+      #       git push --set-upstream origin $NEW_BRANCH || echo "No changes to push"
     
-      - name: Create PR and Comment
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const sourceBranch = context.payload.pull_request.head.ref; 
-            const optimisedBranch = `Green-${sourceBranch}`;
+      # - name: Create PR and Comment
+      #   uses: actions/github-script@v5
+      #   with:
+      #     script: |
+      #       const sourceBranch = context.payload.pull_request.head.ref; 
+      #       const optimisedBranch = `Green-${sourceBranch}`;
 
-            updatedFiles=JSON.parse(process.env.updatedFiles)
+      #       updatedFiles=JSON.parse(process.env.updatedFiles)
 
-            // Combine explanations and create a comment on the new PR
-            const explanations = updatedFiles.map(file => `File: ${file.path}\nExplanation: ${file.explanation}`).join("\n\n");
+      #       // Combine explanations and create a comment on the new PR
+      #       const explanations = updatedFiles.map(file => `File: ${file.path}\nExplanation: ${file.explanation}`).join("\n\n");
 
-            // Create a PR
-            const pr = await github.rest.pulls.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `GreenSense optimisations for ${sourceBranch}`,
-                head: optimisedBranch, // "optimised-testbranch"
-                base: sourceBranch, // "testbranch"
-                body: explanations
-            });
+      #       // Create a PR
+      #       const pr = await github.rest.pulls.create({
+      #           owner: context.repo.owner,
+      #           repo: context.repo.repo,
+      #           title: `GreenSense optimisations for ${sourceBranch}`,
+      #           head: optimisedBranch, // "optimised-testbranch"
+      #           base: sourceBranch, // "testbranch"
+      #           body: explanations
+      #       });
