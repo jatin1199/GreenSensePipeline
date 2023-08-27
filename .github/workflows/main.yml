@@ -1,0 +1,167 @@
+name: GreenSense
+
+on:
+  pull_request:
+    branches:
+        - main
+    types:
+        - opened
+        - synchronize
+
+jobs:
+  GreenSense:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Updated Code
+        env: 
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} 
+        id: process-files
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const https = require('https');
+            const fs = require('fs');
+        
+            const { owner, repo, number } = context.issue;
+        
+            async function makeOpenAIRequest(fileContent) {
+                return new Promise((resolve, reject) => {
+                    const requestData = {
+                        model: "gpt-3.5-turbo",
+                        temperature: 0.1,
+                        messages: [
+                            {
+                              "role": "system",
+                              "content": "Your task is to optimize the provided code. Improve its speed and time complexity. Improve its algorithmic efficiency. Some optimisations may include connection pooling, inbuilt functions, parallel processing. The response should strictly follow this format: Start with the string [CODE_START], then the optimized code, followed by [CODE_END]. After that, start with [EXPLANATION_START], provide one line explanation of the optimisation and provide the complexities of the original code and complexities of the optimized code, and end with [EXPLANATION_END]."
+                            },
+                            {
+                              "role": "user",
+                              "content": "Optimize this code: " + fileContent
+                            }
+                        ]
+                    };
+        
+                    const options = {
+                        hostname: 'api.openai.com',
+                        path: '/v1/chat/completions',
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + process.env.OPENAI_API_KEY,
+                            'Content-Length': Buffer.byteLength(JSON.stringify(requestData))
+                        }
+                    };
+        
+                    const req = https.request(options, res => {
+                        let responseBody = '';
+        
+                        res.on('data', chunk => {
+                            responseBody += chunk;
+                        });
+        
+                        res.on('end', () => {
+                            resolve(JSON.parse(responseBody));
+                        });
+                    });
+        
+                    req.on('error', error => {
+                        reject(error);
+                    });
+        
+                    req.write(JSON.stringify(requestData));
+                    req.end();
+                });
+            }
+        
+            // Get the list of files changed in the PR
+            const { data: files } = await github.rest.pulls.listFiles({
+                owner, repo, pull_number: number
+            });
+        
+            const updatedFiles = [];
+        
+            for (const file of files) {
+                const fileContent = fs.readFileSync(file.filename, 'utf8');
+        
+                try {
+                    const response = await makeOpenAIRequest(fileContent);
+
+                    // GPT response
+                    const chatResponse = response.choices[0].message.content;
+        
+                    const code_regex = /\[CODE_START\]([\s\S]*?)\[CODE_END\]/;
+                    const explanation_regex = /\[EXPLANATION_START\]([\s\S]*?)\[EXPLANATION_END\]/;
+        
+                    const codeMatch = chatResponse.match(code_regex);
+                    const explanationMatch = chatResponse.match(explanation_regex);
+        
+                    let updatedCode = fileContent;
+                    let explanation = 'No explanation';
+        
+                    if (codeMatch && codeMatch[1]) {
+                        updatedCode = codeMatch[1];
+                    } 
+        
+                    if (explanationMatch && explanationMatch[1]) {
+                        explanation = explanationMatch[1];
+                    } 
+        
+                    // Write new content to file
+                    fs.writeFileSync(file.filename, updatedCode, 'utf8');
+        
+                    updatedFiles.push({ path: file.filename, explanation: explanation });
+                } catch (error) {
+                    console.error("Error with OpenAI request:", error);
+                }
+            }
+
+            core.exportVariable('updatedFiles', updatedFiles);
+
+      - name: Commit and Push to New Branch
+        run: |
+            # Extract the source branch name
+            SOURCE_BRANCH=$GITHUB_HEAD_REF
+            NEW_BRANCH="Green-$SOURCE_BRANCH"
+
+            # Create and switch to the new branch
+            git checkout -b $NEW_BRANCH
+
+            # Set git user details
+            git config user.name "GitHub Action"
+            git config user.email "action@github.com"
+
+            # Add and commit changes
+            git add -A
+            git commit -m "Replaced old code with new code from API" || echo "No changes to commit"
+
+            # Use GITHUB_TOKEN for authentication
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+            # Push changes
+            git push --set-upstream origin $NEW_BRANCH || echo "No changes to push"
+    
+      - name: Create PR and Comment
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const sourceBranch = context.payload.pull_request.head.ref; 
+            const optimisedBranch = `Green-${sourceBranch}`;
+
+            updatedFiles=JSON.parse(process.env.updatedFiles)
+
+            // Combine explanations and create a comment on the new PR
+            const explanations = updatedFiles.map(file => `File: ${file.path}\nExplanation: ${file.explanation}`).join("\n\n");
+
+            // Create a PR
+            const pr = await github.rest.pulls.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `GreenSense optimisations for ${sourceBranch}`,
+                head: optimisedBranch, // "optimised-testbranch"
+                base: sourceBranch, // "testbranch"
+                body: explanations
+            });
