@@ -139,7 +139,7 @@ jobs:
             git commit -m "Replaced old code with new code from API" || echo "No changes to commit"
 
             # Use GITHUB_TOKEN for authentication
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git remote set-url origin https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}
 
             # Push changes
             git push --set-upstream origin $NEW_BRANCH || echo "No changes to push"
