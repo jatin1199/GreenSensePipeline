@@ -83,10 +83,10 @@ jobs:
             });
         
             const updatedFiles = [];
-        
+            console.log(files);
             for (const file of files) {
                 const fileContent = fs.readFileSync(file.filename, 'utf8');
-        
+                console.log(file);
                 try {
                     const response = await makeOpenAIRequest(fileContent);
 
