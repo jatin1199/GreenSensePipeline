@@ -121,7 +121,7 @@ jobs:
                     console.error("Error with OpenAI request:", error);
                 }
             }
-
+            
             core.exportVariable('updatedFiles', updatedFiles);
 
       # - name: Commit and Push to New Branch
