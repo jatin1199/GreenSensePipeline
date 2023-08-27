@@ -84,6 +84,10 @@ jobs:
         
             const updatedFiles = [];
             for (const file of files) {
+                fileExtension = f.split('.').pop();
+                if (fileExtension != "py"){
+                    continue;
+                }
                 const fileContent = fs.readFileSync(file.filename, 'utf8');
                 console.log(file.filename);
                 try {
