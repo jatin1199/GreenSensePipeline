@@ -9,7 +9,7 @@ from radon.complexity import cc_visit
 from dotenv import load_dotenv
 load_dotenv()
 N = 10
-openai.api_key = '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'#os.environ["OPENAI_API_KEY"]
+openai.api_key = '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'#os.environ["OPENAI_API_KEY"]
 # print("Open APi key: ", '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')
 
 
