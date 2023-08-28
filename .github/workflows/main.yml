@@ -119,7 +119,8 @@ jobs:
                     // Write new content to file
                     fs.writeFileSync(file.filename, updatedCode, 'utf8');
         
-                    updatedFiles.push({ path: file.filename, explanation: explanation });
+                    updatedFiles.push({ path: file.filename, explanation: explanation, newCode: updatedCode,
+                    oldCode: fileContent });
                 } catch (error) {
                     console.error("Error with OpenAI request:", error);
                 }
@@ -150,14 +151,14 @@ jobs:
             # Push changes
             git push --set-upstream origin $NEW_BRANCH || echo "No changes to push"
     
-      - name: Sart Rating
+      - name: Sart Rating Setup
         uses: actions/setup-python@v4
         with:
             # Semantic version range syntax or exact version of a Python version
             python-version: '3.9'
             # Optional - x64 or x86 architecture, defaults to x64
             architecture: 'x64'
-      - name: 
+      - name: Calulating Star Rating
         run: |
             python .github/workflows/score.py
     
