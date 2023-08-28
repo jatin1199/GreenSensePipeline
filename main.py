@@ -1,19 +1,19 @@
+
+import functools
+import multiprocessing
+
 def fibonacci(n):
     if n <= 1:
         return n
     else:
-        return fibonacci(n-1) + fibonacci(n-2)
-    
+        return functools.reduce(lambda x, _: (x[1], x[0] + x[1]), range(n-1), (0, 1))[1]
 
 def factorial(n):
     if n == 0:
         return 1
     else:
-        return n * factorial(n-1)
-
+        return functools.reduce(lambda x, y: x * y, range(1, n+1))
 
 def create_large_list():
-    large_list = []
-    for i in range(1000000):
-        large_list.append(i)
-    return large_list
+    return list(range(1000000))
+
