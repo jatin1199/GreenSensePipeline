@@ -88,16 +88,16 @@ jobs:
                 const fileContent = fs.readFileSync(file.filename, 'utf8');
         
                 try {
-                    /*# const response = await makeOpenAIRequest(fileContent);
+                    const response = await makeOpenAIRequest(fileContent);
 
                     // GPT response
-                    # const chatResponse = response.choices[0].message.content;
+                    const chatResponse = response.choices[0].message.content;
         
-                    # const code_regex = /\[CODE_START\]([\s\S]*?)\[CODE_END\]/;
-                    # const explanation_regex = /\[EXPLANATION_START\]([\s\S]*?)\[EXPLANATION_END\]/;
+                    const code_regex = /\[CODE_START\]([\s\S]*?)\[CODE_END\]/;
+                    const explanation_regex = /\[EXPLANATION_START\]([\s\S]*?)\[EXPLANATION_END\]/;
         
-                    # const codeMatch = chatResponse.match(code_regex);
-                    # const explanationMatch = chatResponse.match(explanation_regex); */
+                    const codeMatch = chatResponse.match(code_regex);
+                    const explanationMatch = chatResponse.match(explanation_regex);
         
                     let updatedCode = 
                     `def factorial(n):
@@ -108,13 +108,13 @@ jobs:
                     
                     let explanation = 'No explanation';
         
-                    /*# if (codeMatch && codeMatch[1]) {
-                    #     updatedCode = codeMatch[1];
-                    # } 
+                    if (codeMatch && codeMatch[1]) {
+                        updatedCode = codeMatch[1];
+                    } 
         
-                    # if (explanationMatch && explanationMatch[1]) {
-                    #     explanation = explanationMatch[1];
-                    # } */
+                    if (explanationMatch && explanationMatch[1]) {
+                        explanation = explanationMatch[1];
+                    } 
         
                     // Write new content to file
                     fs.writeFileSync(file.filename, updatedCode, 'utf8');
