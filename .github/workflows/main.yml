@@ -86,7 +86,7 @@ jobs:
             console.log("Reading Files");
             for (const file of files) {
                 const fileContent = fs.readFileSync(file.filename, 'utf8');
-        
+                console.log(file.filename);
                 try {
                     const response = await makeOpenAIRequest(fileContent);
 
@@ -110,6 +110,7 @@ jobs:
                     if (explanationMatch && explanationMatch[1]) {
                         explanation = explanationMatch[1];
                     } 
+                    console.log("Got new code with explanation");
         
                     // Write new content to file
                     fs.writeFileSync(file.filename, updatedCode, 'utf8');
