@@ -9,8 +9,8 @@ from radon.complexity import cc_visit
 from dotenv import load_dotenv
 load_dotenv()
 N = 10
-openai.api_key = os.environ["OPENAI_API_KEY"]
-print("Open APi key: ", os.environ["OPENAI_API_KEY"])
+openai.api_key = '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'#os.environ["OPENAI_API_KEY"]
+# print("Open APi key: ", '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')
 
 
 env_file = os.getenv("updatedFiles")
