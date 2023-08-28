@@ -84,7 +84,7 @@ jobs:
         
             const updatedFiles = [];
             for (const file of files) {
-                fileExtension = f.split('.').pop();
+                fileExtension = file.split('.').pop();
                 if (fileExtension != "py"){
                     continue;
                 }
