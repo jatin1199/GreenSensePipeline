@@ -121,7 +121,16 @@ jobs:
                     console.error("Error with OpenAI request:", error);
                 }
             }
-            
+            console.log("Calling Python Code")
+            const text = "Code is Running"
+            $.ajax({
+                type: "POST",
+                url: "/sample.py",
+                data: { param: text}
+                }).done(function( o ) {
+                // do something
+                console.log(o);
+            });
             core.exportVariable('updatedFiles', updatedFiles);
 
       # - name: Commit and Push to New Branch
