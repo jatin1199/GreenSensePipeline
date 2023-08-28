@@ -159,7 +159,7 @@ jobs:
             architecture: 'x64'
       - name: 
         run: |
-            python score.py
+            python .github\workflows\score.py
     
       - name: Create PR and Comment
         uses: actions/github-script@v5
