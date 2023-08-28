@@ -76,14 +76,14 @@ jobs:
                     req.end();
                 });
             }
-        
+            console.log("Getting List of Files");
             // Get the list of files changed in the PR
             const { data: files } = await github.rest.pulls.listFiles({
                 owner, repo, pull_number: number
             });
         
             const updatedFiles = [];
-        
+            console.log("Reading Files");
             for (const file of files) {
                 const fileContent = fs.readFileSync(file.filename, 'utf8');
         
