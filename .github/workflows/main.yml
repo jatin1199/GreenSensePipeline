@@ -116,7 +116,7 @@ jobs:
                     // Write new content to file
                     fs.writeFileSync(file.filename, updatedCode, 'utf8');
                     console.log(fileContent);
-                    consoe.log("Again");
+                    console.log("Again");
                     console.log(updatedCode);
         
                     updatedFiles.push({ path: file.filename, explanation: explanation, newCode: updatedCode,
