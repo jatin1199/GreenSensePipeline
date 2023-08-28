@@ -142,35 +142,35 @@ if __name__ == "__main__":
     for codes in old_and_new_code:
       new_code = codes["newCode"]
       old_code = codes["oldCode"]
-    # unoptimised
-    print("unoptimised Code")
-    score_resp_unoptimised = {'factorial': {'time_complexity': 'O(n)', 'space_complexity': 'O(n)', 'cyclo_complexity': 2, 'score': 22}, 'fibonacci': {'time_complexity': 
-'O(2^n)', 'space_complexity': 'O(n)', 'cyclo_complexity': 2, 'score': 112}}
-    path = 'utils/unoptimised_code.py'
-    score_resp_unoptimised = get_score_for_code(old_code)
-    
+      # unoptimised
+      print("unoptimised Code")
+      score_resp_unoptimised = {'factorial': {'time_complexity': 'O(n)', 'space_complexity': 'O(n)', 'cyclo_complexity': 2, 'score': 22}, 'fibonacci': {'time_complexity': 
+  'O(2^n)', 'space_complexity': 'O(n)', 'cyclo_complexity': 2, 'score': 112}}
+      path = 'utils/unoptimised_code.py'
+      score_resp_unoptimised = get_score_for_code(old_code)
+      
 
 
-    # unoptimised
-    print("\n\noptimised Code")
-    score_resp_optimised = {'fibonacci': {'time_complexity': 'O(n)', 'space_complexity': 'O(n)', 'cyclo_complexity': 2, 'score': 22}, 'factorial': {'time_complexity': 
-'O(n)', 'space_complexity': 'O(1)', 'cyclo_complexity': 2, 'score': 13}}
-    path = 'utils/optimised_code.py'
-    score_resp_optimised = get_score_for_code(new_code)
-    # print(score_resp_unoptimised)
-    # print(score_resp_optimised)
-    print("\n\n")
-    for function in score_resp_unoptimised:
-        print(f"Calculating Score for Function {function}")
-        old_score, new_score = score_resp_unoptimised[function]["score"],score_resp_optimised[function]["score"]
-        print(f"Score for unoptimised Function {old_score}")
-        print(f"Score for optimised Function {new_score}")
-        print(f"Calculating Sart Rating for Function {function}")
-        star_rating = give_start_rating(old_score,new_score)
-        # print(star_rating)
-        old_star, new_star = star_rating["old_code"], star_rating["new_code"]
-        old_extra = 0 if math.ceil(old_star)==old_star else 1
-        new_extra = 0 if math.ceil(new_star)==new_star else 1
-        print("Old Code Star Rating:"+"\u2B50"*math.floor(old_star)+"\u2605"*old_extra)
-        print("New Code Star Rating:"+"\u2B50"*math.floor(new_star)+"\u2605"*new_extra)
-        print("\n\n")
+      # unoptimised
+      print("\n\noptimised Code")
+      score_resp_optimised = {'fibonacci': {'time_complexity': 'O(n)', 'space_complexity': 'O(n)', 'cyclo_complexity': 2, 'score': 22}, 'factorial': {'time_complexity': 
+  'O(n)', 'space_complexity': 'O(1)', 'cyclo_complexity': 2, 'score': 13}}
+      path = 'utils/optimised_code.py'
+      score_resp_optimised = get_score_for_code(new_code)
+      # print(score_resp_unoptimised)
+      # print(score_resp_optimised)
+      print("\n\n")
+      for function in score_resp_unoptimised:
+          print(f"Calculating Score for Function {function}")
+          old_score, new_score = score_resp_unoptimised[function]["score"],score_resp_optimised[function]["score"]
+          print(f"Score for unoptimised Function {old_score}")
+          print(f"Score for optimised Function {new_score}")
+          print(f"Calculating Sart Rating for Function {function}")
+          star_rating = give_start_rating(old_score,new_score)
+          # print(star_rating)
+          old_star, new_star = star_rating["old_code"], star_rating["new_code"]
+          old_extra = 0 if math.ceil(old_star)==old_star else 1
+          new_extra = 0 if math.ceil(new_star)==new_star else 1
+          print("Old Code Star Rating:"+"\u2B50"*math.floor(old_star)+"\u2605"*old_extra)
+          print("New Code Star Rating:"+"\u2B50"*math.floor(new_star)+"\u2605"*new_extra)
+          print("\n\n")
