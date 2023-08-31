@@ -160,12 +160,15 @@ if __name__ == "__main__":
       # print(score_resp_unoptimised)
       # print(score_resp_optimised)
       print("\n\n")
+      old_final,new_final = 0,0
       for function in score_resp_unoptimised:
           print(f"Calculating Score for Function {function}")
           old_score, new_score = score_resp_unoptimised[function]["score"],score_resp_optimised[function]["score"]
           print(f"Score for unoptimised Function {old_score}")
           print(f"Score for optimised Function {new_score}")
           print(f"Calculating Sart Rating for Function {function}")
+          old_final += old_score
+          new_final += new_score
           star_rating = give_start_rating(old_score,new_score)
           # print(star_rating)
           old_star, new_star = star_rating["old_code"], star_rating["new_code"]
@@ -174,3 +177,14 @@ if __name__ == "__main__":
           print("Old Code Star Rating:"+"\u2B50"*math.floor(old_star)+"\u2605"*old_extra)
           print("New Code Star Rating:"+"\u2B50"*math.floor(new_star)+"\u2605"*new_extra)
           print("\n\n")
+
+      print("----------------------------------------------------")
+      print("Complete PR Rating")
+      star_rating = give_start_rating(old_final,new_final)
+      # print(star_rating)
+      old_star, new_star = star_rating["old_code"], star_rating["new_code"]
+      old_extra = 0 if math.ceil(old_star)==old_star else 1
+      new_extra = 0 if math.ceil(new_star)==new_star else 1
+      print("Old PR Star Rating:"+"\u2B50"*math.floor(old_star)+"\u2605"*old_extra)
+      print("New PR Star Rating:"+"\u2B50"*math.floor(new_star)+"\u2605"*new_extra)
+      print("\n\n")
