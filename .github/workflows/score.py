@@ -201,6 +201,7 @@ if __name__ == "__main__":
       print("Complete PR Rating")
       star_rating = give_start_rating(normalise_old_pr_score,normalise_new_pr_score)
       # print(star_rating)
+      print("Normalise Old PR Score: ", normalise_old_pr_score,"Normalise New PR Score: ", normalise_new_pr_score)
       old_star, new_star = star_rating["old_code"], star_rating["new_code"]
       old_extra = 0 if math.ceil(old_star)==old_star else 1
       new_extra = 0 if math.ceil(new_star)==new_star else 1
