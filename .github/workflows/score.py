@@ -136,6 +136,20 @@ def get_score_for_code(fun):
     
     return resp
 
+def normlise_scores(old_scores,new_scores):
+    max_score = max(old_scores+new_scores)
+    min_score = min(old_scores+new_scores)
+    print("Max Score:", max_score)
+    print("Min Score:", min_score)
+
+    normalise_old_score = 0
+    for old_score in old_scores:
+        normalise_old_score += (old_score - min_score)/(max_score - min_score) 
+    normalise_new_score = 0
+    for new_score in new_scores:
+        normalise_new_score += (new_score - min_score)/(max_score - min_score)
+    
+    return (normalise_old_score,normalise_new_score)
 
 if __name__ == "__main__":
     
@@ -161,6 +175,8 @@ if __name__ == "__main__":
       # print(score_resp_optimised)
       print("\n\n")
       old_final,new_final = 0,0
+      new_scores_list = []
+      old_scores_list = []
       for function in score_resp_unoptimised:
           print(f"Calculating Score for Function {function}")
           old_score, new_score = score_resp_unoptimised[function]["score"],score_resp_optimised[function]["score"]
@@ -169,6 +185,8 @@ if __name__ == "__main__":
           print(f"Calculating Sart Rating for Function {function}")
           old_final += old_score
           new_final += new_score
+          old_scores_list.append(old_score)
+          new_scores_list.append(new_score)
           star_rating = give_start_rating(old_score,new_score)
           # print(star_rating)
           old_star, new_star = star_rating["old_code"], star_rating["new_code"]
@@ -178,9 +196,10 @@ if __name__ == "__main__":
           print("New Code Star Rating:"+"\u2B50"*math.floor(new_star)+"\u2605"*new_extra)
           print("\n\n")
 
+      normalise_old_pr_score, normalise_new_pr_score = normlise_scores(old_scores_list, new_scores_list)
       print("----------------------------------------------------")
       print("Complete PR Rating")
-      star_rating = give_start_rating(old_final,new_final)
+      star_rating = give_start_rating(normalise_old_pr_score,normalise_new_pr_score)
       # print(star_rating)
       old_star, new_star = star_rating["old_code"], star_rating["new_code"]
       old_extra = 0 if math.ceil(old_star)==old_star else 1
